@@ -104,6 +104,7 @@
                         <li><a href="/SAADurango/comparativoGlobal.jsp">Folios a Remisionar</a></li>
                         <li class="divider"></li>
                         <li><a href="/SAADurango/facturacion/adminIFIQ.jsp">Administrar IFIQ</a></li>
+                        <li><a href="/SAADurango/facturacion/verIFIQ.jsp">Ver IFIQ</a></li>
                     </ul>
                 </li>
                 <!--li class="dropdown">
