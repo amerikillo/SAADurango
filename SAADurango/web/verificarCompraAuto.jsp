@@ -76,9 +76,7 @@
             <form action="verificarCompraAuto.jsp" method="get">
                 <br/>
                 <div class="row">
-                    <label class="col-sm-2">
-                        <h4>&Oacute;rdenes de Compra: </h4>
-                    </label>
+                    <h4 class="col-sm-2">Elegir Remisión: </h4>
                     <div class="col-sm-9">
                         <select class="form-control" name="NoCompra" onchange="this.form.submit();">
                             <option value="">-- Proveedor -- Orden de Compra --</option>
@@ -137,75 +135,78 @@
                         %>
                     </form>
                 </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <tr>
-                                <td>Remisión</td>
-                                <td>Código de Barras</td>
-                                <td>CLAVE</td>
-                                <td>Descripción</td>                       
-                                <td>Lote</td>
-                                <td>Caducidad</td>                        
-                                <td>Cantidad</td>                      
-                                <td>Costo U</td>                     
-                                <td>IVA</td>                       
-                                <td>Importe</td>
-                                <td>Observaciones</td>
-                                <td></td>
-                            </tr>
-                            <%
-                                int banBtn = 0;
-                                try {
-                                    con.conectar();
-                                    ResultSet rset = con.consulta("SELECT C.F_Cb,C.F_ClaPro,M.F_DesPro,C.F_Lote,C.F_FecCad,C.F_Pz,F_IdCom, C.F_Costo, C.F_ImpTo, C.F_ComTot, C.F_FolRemi, C.F_Obser FROM tb_compratemp C INNER JOIN tb_medica M ON C.F_ClaPro=M.F_ClaPro WHERE F_OrdCom='" + vOrden + "' and F_FolRemi = '" + vRemi + "'  and F_Estado = '2'");
-                                    while (rset.next()) {
-                                        banBtn = 1;
-                            %>
-                            <tr>
-                                <td><%=rset.getString("C.F_FolRemi")%></td>
-                                <td><%=rset.getString(1)%></td>
-                                <td><%=rset.getString(2)%></td>
-                                <td><%=rset.getString(3)%></td>
-                                <td><%=rset.getString(4)%></td>
-                                <td><%=df3.format(df2.parse(rset.getString(5)))%></td>
-                                <td><%=formatter.format(rset.getDouble(6))%></td>           
-                                <td><%=formatterDecimal.format(rset.getDouble("C.F_Costo"))%></td>
-                                <td><%=formatterDecimal.format(rset.getDouble("C.F_ImpTo"))%></td>          
-                                <td><%=formatterDecimal.format(rset.getDouble("C.F_ComTot"))%></td>   
-                                <td><%=rset.getString("C.F_Obser")%></td>
-                                <td>
-                                    <form method="get" action="Modificaciones">
-                                        <input name="id" type="text" style="" class="hidden" value="<%=rset.getString(7)%>" />
-                                        <button class="btn btn-warning" name="accion" value="modificarVerifica"><span class="glyphicon glyphicon-pencil" ></span></button>
-                                        <button class="btn btn-danger" onclick="return confirm('¿Seguro de que desea eliminar?');" name="accion" value="eliminarVerifica"><span class="glyphicon glyphicon-remove"></span></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <%
+
+                <form action="nuevoAutomaticaLotes" method="post">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <td>Remisión</td>
+                                    <td>Código de Barras</td>
+                                    <td>CLAVE</td>
+                                    <td>Descripción</td>
+                                    <td>Ori</td>
+                                    <td>Lote</td>
+                                    <td>Caducidad</td>                        
+                                    <td>Cantidad</td>                      
+                                    <td>Costo U</td>                     
+                                    <td>IVA</td>                       
+                                    <td>Importe</td>
+                                    <td>Observaciones</td>
+                                    <td></td>
+                                </tr>
+                                <%
+                                    int banBtn = 0;
+                                    try {
+                                        con.conectar();
+                                        ResultSet rset = con.consulta("SELECT C.F_Cb,C.F_ClaPro,M.F_DesPro,C.F_Lote,C.F_FecCad,C.F_Pz,F_IdCom, C.F_Costo, C.F_ImpTo, C.F_ComTot, C.F_FolRemi, C.F_Obser, C.F_Origen FROM tb_compratemp C INNER JOIN tb_medica M ON C.F_ClaPro=M.F_ClaPro WHERE F_OrdCom='" + vOrden + "' and F_FolRemi = '" + vRemi + "'  and F_Estado = '2'");
+                                        while (rset.next()) {
+                                            banBtn = 1;
+                                %>
+                                <tr>
+                                    <td><%=rset.getString("C.F_FolRemi")%></td>
+                                    <td><input class="form-control" value="<%=rset.getString(1)%>" name="F_Cb<%=rset.getString("F_IdCom")%>" required /></td>
+                                    <td><%=rset.getString(2)%></td>
+                                    <td><%=rset.getString(3)%></td>
+                                    <td><%=rset.getString("F_Origen")%></td>
+                                    <td><%=rset.getString(4)%></td>
+                                    <td><%=df3.format(df2.parse(rset.getString(5)))%></td>
+                                    <td><%=formatter.format(rset.getDouble(6))%></td>           
+                                    <td><%=formatterDecimal.format(rset.getDouble("C.F_Costo"))%></td>
+                                    <td><%=formatterDecimal.format(rset.getDouble("C.F_ImpTo"))%></td>          
+                                    <td><%=formatterDecimal.format(rset.getDouble("C.F_ComTot"))%></td>   
+                                    <td><%=rset.getString("C.F_Obser")%></td>
+                                    <td>
+                                        <!--form method="get" action="Modificaciones">
+                                            <input name="id" type="text" style="" class="hidden" value="<%=rset.getString(7)%>" />
+                                            <button class="btn btn-warning" name="accion" value="modificarVerifica"><span class="glyphicon glyphicon-pencil" ></span></button>
+                                            <button class="btn btn-danger" onclick="return confirm('¿Seguro de que desea eliminar?');" name="accion" value="eliminarVerifica"><span class="glyphicon glyphicon-remove"></span></button>
+                                        </form-->
+                                    </td>
+                                </tr>
+                                <%
+                                        }
+                                        con.cierraConexion();
+                                    } catch (Exception e) {
+
                                     }
-                                    con.cierraConexion();
-                                } catch (Exception e) {
 
-                                }
+                                %>
+                                <tr>
+                                    <td colspan="13">
 
-                            %>
-                            <tr>
-                                <td colspan="13">
+                                    </td>
+                                </tr>
 
-                                </td>
-                            </tr>
-
-                        </table>
+                            </table>
+                        </div>
+                        <hr/>
                     </div>
-                    <hr/>
-                </div>
-                <%                                if (banBtn == 1) {
-                %>
+                    <%                                if (banBtn == 1) {
+                    %>
 
-                <div class="panel-body table-responsive">
-                    <div class="row">
-                        <form action="nuevoAutomaticaLotes" method="post">
+                    <div class="panel-body table-responsive">
+                        <div class="row">
                             <input name="vOrden" type="text" style="" class="hidden" value='<%=vOrden%>' />
                             <input name="vRemi" type="text" style="" class="hidden" value='<%=vRemi%>' />
                             <div class="col-lg-3 col-lg-offset-3">
@@ -219,13 +220,13 @@
                                 <button  value="GuardarVerifica" name="accion" class="btn btn-success  btn-block" onclick="return confirm('Seguro que desea realizar la compra?');
                                         return validaCompra();">Confirmar Remisión</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-                <%
-                    }
-                %>
+                    <%
+                        }
+                    %>
 
+                </form>
                 <!--div class="panel-footer">
                     <button class="btn btn-block btn-success btn-lg" name="accion" id="accion" value="confirmar" onclick="return validaCompra();">Confirmar Compra</button>
                 </div-->
@@ -275,7 +276,7 @@
                                     <h4>Fecha de nueva recepción</h4>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input type="date" min="" class="form-control" id="FechaOrden" name="FechaOrden" />
+                                    <input type="date" class="form-control" id="FechaOrden" name="FechaOrden" />
                                 </div>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="HoraOrden" name="HoraOrden">
@@ -299,9 +300,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="checkbox">
-                                        <label>
-                                            <h4><input type="checkbox" checked name="todosChk" id="todosChk" onclick="checkea(this)">Seleccionar todas</h4>
-                                        </label>
+                                        <h4><input type="checkbox" checked name="todosChk" id="todosChk" onclick="checkea(this)">Seleccionar todas</h4>
                                     </div>
                                 </div>
                             </div>
@@ -340,19 +339,20 @@
         <!--
         /Modal
         -->
+
+        <!-- 
+        ================================================== -->
+        <!-- Se coloca al final del documento para que cargue mas rapido -->
+        <!-- Se debe de seguir ese orden al momento de llamar los JS -->
+        <script src="js/jquery-1.9.1.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript">
+
+        </script>
     </body>
 
 
-    <!-- 
-    ================================================== -->
-    <!-- Se coloca al final del documento para que cargue mas rapido -->
-    <!-- Se debe de seguir ese orden al momento de llamar los JS -->
-    <script src="js/jquery-1.9.1.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.js"></script>
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript">
-
-    </script>
 
 </html>

@@ -53,7 +53,7 @@
         <link href="css/datepicker3.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">
         <!---->
-        <title>SIALSS</title>
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body>
         <div class="container">
@@ -79,12 +79,13 @@
                                     <td>No. Folio</td>
                                     <td>Punto de Entrega</td>
                                     <td>Fecha de Entrega</td>
-                                    <td>Especial</td>
-                                    <td>Común</td>
+                                    <td>Admon</td>
+                                    <td>Venta</td>
                                     <td>Ver Factura</td>
                                     <td>Devolución</td>
+                                    <td>Reportes</td>
                                     <%
-                                        if (usua.equals("oscar")) {
+                                        if (usua.equals("remision")) {
                                             out.println("<td>Reintegrar Insumo</td>");
                                         }
                                     %>
@@ -135,8 +136,13 @@
                                             }
                                         %>
                                     </td>
+                                    <td>
+                                        <form class="form-horizontal" role="form" name="formulario_receta" id="formulario_receta" method="get" action="ReporteImprime">   
+                                            <button class="btn btn-block btn-primary" id="btn_capturar" name="btn_capturar" value="<%=rset.getString(1)%>" onclick="return confirm('¿Esta Ud. Seguro de Iniciar proceso de Generación?')">Generar</button>
+                                        </form>
+                                    </td>
                                     <%
-                                        if (usua.equals("oscar")) {
+                                        if (usua.equals("remision")) {
                                     %>
                                     <td>
                                         <%

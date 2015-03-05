@@ -33,6 +33,17 @@
         Clave = "";
     }
     ConectionDB con = new ConectionDB();
+    String UsuaJuris = "";
+    try {
+        con.conectar();
+        ResultSet rset = con.consulta("select F_Juris from tb_usuario where F_Usu = '" + usua + "'");
+        while (rset.next()) {
+            UsuaJuris = rset.getString("F_Juris");
+        }
+        con.cierraConexion();
+    } catch (Exception e) {
+
+    }
 %>
 <html>
     <head>
@@ -44,8 +55,7 @@
         <link rel="stylesheet" href="css/cupertino/jquery-ui-1.10.3.custom.css" />
         <link href="css/navbar-fixed-top.css" rel="stylesheet">
         <!---->
-        <title>SIALSS</title>
-
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body>
         <div class="container">
@@ -59,142 +69,214 @@
                     <h3 class="panel-title">Facturación aútomatica</h3>
                 </div>
                 <div class="panel-body ">
-                    <form class="form-horizontal" role="form" name="formulario1" id="formulario1" method="post" action="Facturacion">
+                    <form class="form-horizontal" role="form" name="formulario1" id="formulario1" method="post" action="factura.jsp">
                         <div class="form-group">
                             <div class="form-group">
                                 <!--label for="Clave" class="col-xs-2 control-label">Clave*</label>
                                 <div class="col-xs-2">
                                     <input type="text" class="form-control" id="Clave" name="Clave" placeholder="Clave" onKeyPress="return tabular(event, this)" autofocus >
                                 </div-->
-                                <label for="Nombre" class="col-xs-1 control-label">Clave Unidad</label>
+                                <!--label for="Nombre" class="col-xs-1 control-label">Clave Unidad</label>
                                 <div class="col-xs-7">
                                     <select id="Nombre" name="Nombre" class="form-control">
                                         <option value="">Unidad</option>
-                                        <%
-                                            try {
-                                                con.conectar();
-                                                ResultSet rset = con.consulta("select F_ClaCli, F_NomCli from tb_uniatn u, tb_unireq r where u.F_ClaCli = r.F_ClaUni and F_StsCli = 'A' and r.F_Status = '0' group by F_ClaCli");
-                                                while (rset.next()) {
-                                        %>
-                                        <option value="<%=rset.getString(1)%>"
-                                                <%
-                                                    if (Clave.equals(rset.getString(1))) {
-                                                        out.println("selected");
-                                                    }
-                                                %>
-                                                ><%=rset.getString(2)%></option>
-                                        <%
-                                                }
-                                                con.cierraConexion();
-                                            } catch (Exception e) {
+                                <%                                            try {
+                                        con.conectar();
+                                        ResultSet rset = con.consulta("select F_ClaCli, F_NomCli from tb_uniatn u, tb_unireq r where u.F_ClaCli = r.F_ClaUni and F_StsCli = 'A' and r.F_Status = '0' group by F_ClaCli");
+                                        while (rset.next()) {
+                                %>
+                                <option value="<%=rset.getString(1)%>"
+                                <%
+                                    if (Clave.equals(rset.getString(1))) {
+                                        out.println("selected");
+                                    }
+                                %>
+                                ><%=rset.getString(2)%></option>
+                                <%
+                                        }
+                                        con.cierraConexion();
+                                    } catch (Exception e) {
 
-                                            }
-                                        %>
-                                    </select>
-                                </div>
+                                    }
+                                %>
+                            </select>
+                        </div-->
 
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2"><button class="btn btn-block btn-primary" type="submit" name="accion" value="consultar" onclick="return valida_clave();" > Consultar</button></div>
+
                             </div>
 
                         </div>
                         <div class="form-group">
                             <div class="form-group">
-                                <label for="FecFab" class="col-sm-1 control-label">Fec Entrega</label>
+                                <label for="FecFab" class="col-sm-2 control-label">Fecha de Entrega</label>
                                 <div class="col-sm-2">
-                                    <input type="date" class="form-control" id="FecFab" name="FecFab" placeholder="FecFab" maxlength="10" />
+                                    <input type="date" class="form-control" id="FecEnt" name="F_FecEnt" />
+                                </div>
+                                <div class="col-lg-2">
+                                    <button class="btn btn-block btn-primary" type="submit" name="accion" value="consultar" onclick="return valida_clave();" > Consultar</button>
                                 </div>
                             </div>
                         </div>
 
-                        <button class="btn btn-block btn-primary" type="submit" name="accion" value="guardarGlobal" onclick="return validaRemision();">Generar Concentrado</button> 
-                        <br/><br/>
-                        <button class="btn btn-block btn-danger" type="submit" name="accion" value="cancelar" onclick="return confirm('¿Seguro que desea CANCELAR esta orden?');">Cancelar</button> 
                     </form>
+                    <%
+                        try {
+                            con.conectar();
+                            ResultSet rset = con.consulta("select f.F_ClaUni from tb_fecharuta f, tb_uniatn u where f.F_ClaUni = u.F_ClaCli and f.F_Fecha = '" + request.getParameter("F_FecEnt") + "' and u.F_ClaJurNum = '" + UsuaJuris + "' ");
+                            while (rset.next()) {
+                                String F_NomCli = "";
+                                int banReq = 0;
+                                ResultSet rset2 = con.consulta("select  F_NomCli from tb_uniatn where F_ClaCli = '" + rset.getString("F_ClaUni") + "'");
+                                while (rset2.next()) {
+                                    F_NomCli = rset2.getString("F_NomCli");
+                                }
+
+                                rset2 = con.consulta("select F_ClaUni from tb_unireq where F_Status = '0' and F_ClaUni = '" + rset.getString("F_ClaUni") + "'");
+                                while (rset2.next()) {
+                                    banReq = 1;
+                                }
+                                if (banReq == 1) {
+                    %>
+                    <form action="Facturacion" method="post">
+                        <input name="F_FecEnt" class="hidden" value="<%= request.getParameter("F_FecEnt")%>" />
+                        <input name="F_Juris" class="hidden" value="<%=UsuaJuris%>" />
+                        <button class="btn btn-block btn-primary" type="submit" name="accion" value="guardarGlobal" id="btnGeneraFolio" onclick="return validaRemision()">Generar Folio(s)</button> 
+                    </form>
+
+                    <%
+                                }
+                            }
+                            con.cierraConexion();
+                        } catch (Exception e) {
+                            out.println(e.getMessage());
+                        }
+                    %>
                     <div>
                         <h6>Los campos marcados con * son obligatorios</h6>
                     </div>
                 </div>
                 <div class="panel-footer">
-                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="datosProv">
-                        <thead>
-                            <tr>
-                                <td>Clave</td>
-                                <td>Descripción</td>
-                                <td>Cajas</td>
-                                <td>Piezas</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                try {
-
-                                    con.conectar();
-                                    ResultSet rset = con.consulta("SELECT M.F_ClaPro,M.F_DesPro,REQ.F_CajasReq, REQ.F_PiezasReq FROM tb_unireq REQ INNER JOIN tb_medica M ON REQ.F_ClaPro=M.F_ClaPro WHERE F_ClaUni='" + Clave + "' and F_Status =0");
-                                    while (rset.next()) {
-                            %>
-                            <tr class="odd gradeX">
-                                <td><small><%=rset.getString(1)%></small></td>
-                                <td><small><%=rset.getString(2)%></small></td>
-                                <td><small><%=formatter.format(rset.getInt(3))%></small></td>
-                                <td><small><%=formatter.format(rset.getInt(4))%></small></td>
-                            </tr>
-                            <%
+                    <table class="table table-bordered table-condensed table-striped">
+                        <tr>
+                            <td>No Unidad</td>
+                            <td>Nombre</td>
+                            <td>Ver detalle</td>
+                            <td>Eliminar</td>
+                        </tr>
+                        <%
+                            try {
+                                con.conectar();
+                                ResultSet rset = con.consulta("select f.F_ClaUni from tb_fecharuta f, tb_uniatn u where f.F_ClaUni = u.F_ClaCli and f.F_Fecha = '" + request.getParameter("F_FecEnt") + "' and u.F_ClaJurNum = '" + UsuaJuris + "' ");
+                                while (rset.next()) {
+                                    String F_NomCli = "";
+                                    int banReq = 0;
+                                    ResultSet rset2 = con.consulta("select  F_NomCli from tb_uniatn where F_ClaCli = '" + rset.getString("F_ClaUni") + "'");
+                                    while (rset2.next()) {
+                                        F_NomCli = rset2.getString("F_NomCli");
                                     }
-                                    con.cierraConexion();
-                                } catch (Exception e) {
+
+                                    rset2 = con.consulta("select F_ClaUni from tb_unireq where F_Status = '0' and F_ClaUni = '" + rset.getString("F_ClaUni") + "'");
+                                    while (rset2.next()) {
+                                        banReq = 1;
+                                    }
+                        %>
+                        <tr>
+                            <td><%=rset.getString("F_ClaUni")%></td>
+                            <td><%=F_NomCli%></td>
+                            <td>
+                                <%
+                                    if (banReq == 1) {
+                                %>
+                                <form action="detRequerimiento.jsp" method="post">
+                                    <input name="F_ClaUni" value="<%=rset.getString("F_ClaUni")%>" class="hidden" />
+                                    <input name="F_FecEnt" value="<%=request.getParameter("F_FecEnt")%>" class="hidden" />
+                                    <button class="btn btn-block btn-sm btn-primary"  ><span class="glyphicon glyphicon-search"></span></button>
+
+                                </form>
+                                <%
+                                    }
+                                %>
+                            </td>
+                            <td>
+
+                                <%
+                                    if (banReq == 1) {
+                                %>
+                                <form action="Facturacion" method="post">
+                                    <input name="F_ClaUni" value="<%=rset.getString("F_ClaUni")%>" class="hidden" />
+                                    <input name="F_FecEnt" value="<%=request.getParameter("F_FecEnt")%>" class="hidden" />
+                                    <button class="btn btn-block btn-warning" name="accion" value="cancelar"><span class="glyphicon glyphicon-remove"></span></button>
+                                </form>
+                                <%
+                                    }
+                                %>
+                            </td>
+                        </tr>
+                        <%
                                 }
-                            %>
-                        </tbody>
+                                con.cierraConexion();
+                            } catch (Exception e) {
+                                out.println(e.getMessage());
+                            }
+                        %>
                     </table>
+
                 </div>
             </div>
         </div>
         <br><br><br>
         <div class="navbar navbar-fixed-bottom navbar-inverse">
             <div class="text-center text-muted">
-                GNK Logística || Desarrollo de Aplicaciones 2009 - 2014 <span class="glyphicon glyphicon-registration-mark"></span><br />
+                GNK Logística || Desarrollo de Aplicaciones 2009 - 2015 <span class="glyphicon glyphicon-registration-mark"></span><br />
                 Todos los Derechos Reservados
             </div>
         </div>
 
-        
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center" id="imagenCarga">
+                            <img src="imagenes/ajax-loader-1.gif" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 
+        ================================================== -->
+        <!-- Se coloca al final del documento para que cargue mas rapido -->
+        <!-- Se debe de seguir ese orden al momento de llamar los JS -->
+        <script src="js/jquery-1.9.1.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.js"></script>
+        <script src="js/jquery.dataTables.js"></script>
+        <script src="js/dataTables.bootstrap.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+        <script>
+                            $(document).ready(function() {
+                                $('#datosProv').dataTable();
+                            });
+                            function validaRemision() {
+                                var confirmacion = confirm('Seguro que desea generar los Folios');
+                                if (confirmacion === true) {
+                                    $('#myModal').modal();
+                                    $('#btnGeneraFolio').prop('disabled', true);
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            }
+
+        </script> 
+
     </body>
 </html>
 
-
-<!-- 
-================================================== -->
-<!-- Se coloca al final del documento para que cargue mas rapido -->
-<!-- Se debe de seguir ese orden al momento de llamar los JS -->
-<script src="js/jquery-1.9.1.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/jquery-ui-1.10.3.custom.js"></script>
-<script src="js/jquery.dataTables.js"></script>
-<script src="js/dataTables.bootstrap.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script>
-                                $(document).ready(function() {
-                                    $('#datosProv').dataTable();
-                                });
-                                function validaRemision() {
-                                    var seg = confirm('Desea Remisionar este Insumo?');
-                                    if (seg == false) {
-                                        return false;
-                                    } else {
-                                        if ($('#FecFab').val() === "") {
-                                            alert("Debe seleccionar una fecha de entrega");
-                                            return false;
-                                        } else {
-                                            document.getElementById('Loader').style.display = 'block';
-                                            var observaciones = document.getElementById('Obser').value;
-                                            document.getElementById('Obs').value = observaciones;
-                                            var req = document.getElementById('Requerimiento').value;
-                                            document.getElementById('F_Req').value = req;
-                                            document.getElementById('BtnGuardar').click();
-                                        }
-                                    }
-
-                                }
-
-</script> 

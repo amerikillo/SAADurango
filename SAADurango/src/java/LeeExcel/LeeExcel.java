@@ -4,6 +4,7 @@ import conn.ConectionDB;
 import java.io.FileInputStream;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Vector;
@@ -74,17 +75,28 @@ public class LeeExcel {
 
                 if (j == 0) {
                     try {
-                        String Clave = (vectorCellEachRowData.get(j).toString() + "");
+                        String Clave = (vectorCellEachRowData.get(j).toString() + "").trim();
                         /*NumberFormat formatter = new DecimalFormat("0000");
-                        Clave = formatter.format(Double.parseDouble(Clave));*/
-                        qry = qry + "'" + Clave + "' , ";
+                         Clave = formatter.format(Double.parseDouble(Clave));*/
+                        System.out.println(Clave);
+                        Clave.replaceAll("^\\s*", "");
+                        Clave.replaceAll(" ", "");
+                        Clave.replaceAll("&nbsp;", "");
+                        for (int x = 0; x < Clave.length(); x++) {
+                            System.out.println(Clave.charAt(x) + " = " + Clave.codePointAt(x));
+                        };
+                        qry = qry + "'" + Clave + "', ";
                     } catch (Exception e) {
                     }
                 } else if (j == 1) {
                     System.out.println("algo");
                     try {
                         String ClaPro = ((vectorCellEachRowData.get(j).toString()) + "");
-                        NumberFormat formatter = new DecimalFormat("0000.00");
+                        DecimalFormat formatter = new DecimalFormat("0000.00");
+                        DecimalFormatSymbols custom = new DecimalFormatSymbols();
+                        custom.setDecimalSeparator('.');
+                        custom.setGroupingSeparator(',');
+                        formatter.setDecimalFormatSymbols(custom);
                         ClaPro = formatter.format(Double.parseDouble(ClaPro));
                         String[] punto = ClaPro.split("\\.");
                         System.out.println(punto.length);
@@ -109,7 +121,7 @@ public class LeeExcel {
                 } else {
                     try {
                         String Clave = ((int) Double.parseDouble(vectorCellEachRowData.get(j).toString()) + "");
-                        qry = qry + "'" + Clave + "' , ";
+                        qry = qry + "'" + Clave.trim() + "' , ";
                     } catch (Exception e) {
                     }
                 }

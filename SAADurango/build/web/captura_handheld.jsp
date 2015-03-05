@@ -81,7 +81,7 @@
         <link rel="stylesheet" href="css/cupertino/jquery-ui-1.10.3.custom.css" />
         <link href="css/navbar-fixed-top.css" rel="stylesheet">
         <!---->
-        <title>SIALSS</title>
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body onLoad="foco();mueveReloj();">
         <div class="container">            
@@ -680,7 +680,7 @@
         <br><br><br>
         <div class="navbar navbar-fixed-bottom navbar-inverse">
             <div class="text-center text-muted">
-                GNK Logística || Desarrollo de Aplicaciones 2009 - 2014 <span class="glyphicon glyphicon-registration-mark"></span><br />
+                GNK Logística || Desarrollo de Aplicaciones 2009 - 2015 <span class="glyphicon glyphicon-registration-mark"></span><br />
                 Todos los Derechos Reservados
             </div>
         </div>

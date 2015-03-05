@@ -50,7 +50,7 @@
         <link href="css/navbar-fixed-top.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">
         <!---->
-        <title>SIALSS</title>
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body class="container">
         <h1>SIALSS</h1>

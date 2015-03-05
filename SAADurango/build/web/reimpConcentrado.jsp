@@ -53,7 +53,7 @@
         <link href="css/datepicker3.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">
         <!---->
-        <title>SIALSS</title>
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body>
         <div class="container">
@@ -66,13 +66,13 @@
                 <h3>Revisión de Concentrados por Proveedor</h3>
                 <div class="row">
                     <form action="reimpRutaConcentrado.jsp" method="post" target="_blank">
-                    <h4 class="col-sm-4">Seleccione fecha para concentrado de ruta:</h4>
-                    <div class="col-sm-2">
-                        <input type="date" class="form-control" required="" name="F_FecSur">
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-primary btn-block">Generar</button>
-                    </div>
+                        <h4 class="col-sm-4">Seleccione fecha para concentrado de ruta:</h4>
+                        <div class="col-sm-2">
+                            <input type="date" class="form-control" required="" name="F_FecSur">
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-primary btn-block">Generar</button>
+                        </div>
                     </form>
                 </div>
                 <br />
@@ -84,11 +84,12 @@
                                     <td>No. Folio</td>
                                     <td>Punto de entrega</td>
                                     <td>Orden de Compra</td>
-                                    <td>Concentrado</td>
+                                    <td>Folio Admon</td>
+                                    <td>Folio Venta</td>
                                     <td>Marbetes</td>
                                     <td>Excel</td>
                                     <td>Cancelar</td>
-                                    <td>Reenviar</td>
+                                    <!--td>Reenviar</td-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,6 +112,12 @@
                                         </form>
                                     </td>
                                     <td>
+                                        <form action="reimpGlobalReqVenta.jsp" target="_blank">
+                                            <input class="hidden" name="fol_gnkl" value="<%=rset.getString("F_IdFact")%>">
+                                            <button class="btn btn-block btn-primary">Imprimir</button>
+                                        </form>
+                                    </td>
+                                    <td>
                                         <form action="reimpGlobalMarbetes.jsp" target="_blank">
                                             <input class="hidden" name="fol_gnkl" value="<%=rset.getString("F_IdFact")%>">
                                             <button class="btn btn-block btn-primary">Imprimir</button>
@@ -122,7 +129,7 @@
                                     <td>
                                         <form action="Facturacion" method="post">
                                             <%
-                                                if (usua.equals("elideth")) {
+                                                if (usua.equals("remision")) {
                                             %>
                                             <input class="hidden" name="fol_gnkl" value="<%=rset.getString("F_IdFact")%>">
                                             <button class="btn btn-block btn-danger" name="accion" value="EliminaConcentrado" onclick="return confirm('Seguro de eliminar este concentrado?')"><span class="glyphicon glyphicon-remove"></span></button>
@@ -131,13 +138,13 @@
                                                 %>
                                         </form>
                                     </td>
-                                    <td>
+                                    <!--td>
                                         <form action="FacturacionManual" method="post">
                                             <input class="hidden" name="fol_gnkl" value="<%=rset.getString("F_IdFact")%>">
                                             <button class="btn btn-block btn-info" name="accion" value="ReenviarFactura" onclick="return confirm('Seguro de Reenviar este concentrado?')"><span class="glyphicon glyphicon-upload"></span></button>
 
                                         </form>
-                                    </td>
+                                    </td-->
                                 </tr>
                                 <%
                                             }
@@ -202,28 +209,28 @@
             </div>
         </div>
         <%@include file="../jspf/piePagina.jspf" %>
+
+        <!-- 
+        ================================================== -->
+        <!-- Se coloca al final del documento para que cargue mas rapido -->
+        <!-- Se debe de seguir ese orden al momento de llamar los JS -->
+        <script src="js/jquery-1.9.1.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+        <script src="js/jquery.dataTables.js"></script>
+        <script src="js/dataTables.bootstrap.js"></script>
+        <script>
+                                                $(document).ready(function () {
+                                                    $('#datosCompras').dataTable();
+                                                });
+        </script>
+        <script>
+            $(function () {
+                $("#fecha").datepicker();
+                $("#fecha").datepicker('option', {dateFormat: 'dd/mm/yy'});
+            });
+        </script>
     </body>
 </html>
 
-
-<!-- 
-================================================== -->
-<!-- Se coloca al final del documento para que cargue mas rapido -->
-<!-- Se debe de seguir ese orden al momento de llamar los JS -->
-<script src="js/jquery-1.9.1.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/jquery-ui-1.10.3.custom.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="js/jquery.dataTables.js"></script>
-<script src="js/dataTables.bootstrap.js"></script>
-<script>
-                                                $(document).ready(function() {
-                                                    $('#datosCompras').dataTable();
-                                                });
-</script>
-<script>
-    $(function() {
-        $("#fecha").datepicker();
-        $("#fecha").datepicker('option', {dateFormat: 'dd/mm/yy'});
-    });
-</script>

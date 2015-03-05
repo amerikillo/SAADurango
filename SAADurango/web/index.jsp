@@ -13,7 +13,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Ingreso SAA</title>
+        <title>Ingreso SAA - DURANGO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link href="css/bootstrap.css" rel="stylesheet" media="screen">
@@ -36,7 +36,7 @@
                 <!--label for="username" class="uname" data-icon="u" > Your email or username </label-->
                 <div class="row">
                     <div class="col-md-4"><img src="imagenes/GNKL_Small.JPG" ></div>
-                    <div class="col-md-8"><h2>SAA - ISEM</h2></div>
+                    <div class="col-md-8"><h2>SAA - DURANGO</h2></div>
 
                 </div>
                 <div class="row">

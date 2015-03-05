@@ -223,10 +223,14 @@
                                 }
                                 try {
                                     con.conectar();
-                                    ResultSet rset = con.consulta("select o.F_NoCompra, p.F_NomPro from tb_pedidoisem o, tb_proveedor p where o.F_Provee = p.F_ClaProve and o.F_FecSur like  '%" + fecha + "%'  and o.F_Provee like '%" + request.getParameter("Proveedor") + "'  and F_StsPed !='2' and F_Recibido=0  group by o.F_NoCompra");
+                                    ResultSet rset = con.consulta("select o.F_NoCompra, p.F_NomPro, F_StsPed from tb_pedidoisem o, tb_proveedor p where o.F_Provee = p.F_ClaProve and o.F_FecSur like  '%" + fecha + "%'  and o.F_Provee like '%" + request.getParameter("Proveedor") + "'  and F_StsPed !='2' and F_Recibido=0  group by o.F_NoCompra");
                                     while (rset.next()) {
+                                        String banConfirmada = "";
+                                        if (rset.getString("F_StsPed").equals("0")) {
+                                            banConfirmada = " | Sin Confirmar";
+                                        }
                             %>
-                            <option value="<%=rset.getString(1)%>"><%=rset.getString(2)%> - <%=rset.getString(1)%></option>
+                            <option value="<%=rset.getString(1)%>"><%=rset.getString(2)%> - <%=rset.getString(1)%> <%=banConfirmada%></option>
                             <%
                                     }
                                     con.cierraConexion();
@@ -254,7 +258,7 @@
                             <div class="row">
                                 <h4 class="col-sm-3">Folio Orden de Compra:</h4>
                                 <div class="col-sm-2"><input class="form-control" value="<%=rset.getString(1)%>" readonly="" name="folio" id="folio" onkeypress="return tabular(event, this)" /></div>
-                                <h4 class="col-sm-2 text-right">Número de Tarima:</h4>
+                                <h4 class="col-sm-2 text-right">Remisión:</h4>
                                 <div class="col-sm-2"><input class="form-control" value="<%=folioRemi%>" name="folioRemi" id="folioRemi" onkeypress="return tabular(event, this)" /></div>
                                 <div class="col-sm-2">
                                     <%
@@ -559,7 +563,35 @@
                                             </div>
                                             <input value="<%=rset.getString("p.F_ClaProve")%>" name="claPro" id="claPro" class="hidden" onkeypress="return tabular(event, this)" />
                                         </td>
-                                        <td colspan="5">
+                                        <td>
+                                            Origen:
+                                            <select class="form-control" name="F_Origen" id="F_Origen">
+                                                <%
+                                                    try {
+                                                        con.conectar();
+                                                        ResultSet rset3 = con.consulta("select F_ClaOri, F_DesOri from tb_origen");
+                                                        while (rset3.next()) {
+                                                            ResultSet rset4 = con.consulta("select F_Origen from tb_medica where F_ClaPro = '" + rset2.getString(1) + "' ");
+                                                %>
+                                                <option value="<%=rset3.getString("F_ClaOri")%>"
+                                                        <%
+                                                            while (rset4.next()) {
+                                                                if (rset3.getString("F_ClaOri").equals(rset4.getString("F_Origen"))) {
+                                                                    out.println("selected");
+                                                                }
+                                                            }
+                                                        %>
+                                                        ><%=rset3.getString("F_DesOri")%></option>
+                                                <%
+                                                        }
+                                                        con.cierraConexion();
+                                                    } catch (Exception e) {
+                                                        System.out.println(e.getMessage());
+                                                    }
+                                                %>
+                                            </select>
+                                        </td>
+                                        <td colspan="4">
                                             <strong>Observaciones</strong>
                                             <textarea class="form-control" readonly><%=rset2.getString(7)%></textarea>
                                         </td>
@@ -694,8 +726,8 @@
                         <td>Remisión</td>
                         <td><a name="ancla"></a>Código de Barras</td>
                         <td>CLAVE</td>
-                        <td>SAP</td>
-                        <td>Descripción</td>                       
+                        <td>Descripción</td>
+                        <td>Ori</td>
                         <td>Lote</td>
                         <td>Caducidad</td>                        
                         <td>Cantidad</td>                      
@@ -709,7 +741,7 @@
                         String obser = "";
                         try {
                             con.conectar();
-                            ResultSet rset = con.consulta("SELECT C.F_Cb,C.F_ClaPro,M.F_DesPro,C.F_Lote,C.F_FecCad,C.F_Pz,F_IdCom, C.F_Costo, C.F_ImpTo, C.F_ComTot, C.F_FolRemi, M.F_ClaSap FROM tb_compratemp C INNER JOIN tb_medica M ON C.F_ClaPro=M.F_ClaPro WHERE F_OrdCom='" + noCompra + "' and F_Estado = '1'");
+                            ResultSet rset = con.consulta("SELECT C.F_Cb,C.F_ClaPro,M.F_DesPro,C.F_Lote,C.F_FecCad,C.F_Pz,F_IdCom, C.F_Costo, C.F_ImpTo, C.F_ComTot, C.F_FolRemi, C.F_Origen FROM tb_compratemp C INNER JOIN tb_medica M ON C.F_ClaPro=M.F_ClaPro WHERE F_OrdCom='" + noCompra + "' and F_Estado = '1'");
                             while (rset.next()) {
                                 banCompra = 1;
                     %>
@@ -717,8 +749,8 @@
                         <td><%=rset.getString("C.F_FolRemi")%></td>
                         <td><%=rset.getString(1)%></td>
                         <td><%=rset.getString(2)%></td>
-                        <td><%=rset.getString("F_ClaSap")%></td>
                         <td><%=rset.getString(3)%></td>
+                        <td><%=rset.getString("F_Origen")%></td>
                         <td><%=rset.getString(4)%></td>
                         <td><%=df3.format(df2.parse(rset.getString(5)))%></td>
                         <td class="text-right"><%=formatter.format(rset.getDouble(6))%></td>           
@@ -808,13 +840,8 @@
         </div>
 
 
-        <br><br><br>
-        <div class="navbar navbar-inverse">
-            <div class="text-center text-muted">
-                GNK Logística || Desarrollo de Aplicaciones 2009 - 2014 <span class="glyphicon glyphicon-registration-mark"></span><br />
-                Todos los Derechos Reservados
-            </div>
-        </div>
+        <br>
+        <%@include file="jspf/piePagina.jspf" %>
 
 
         <!--
@@ -1154,14 +1181,14 @@
                                             return false;
                                         } else {
                                             var dtFechaActual = new Date();
-                                            var sumarDias = parseInt(30);
+                                            var sumarDias = parseInt(180);
                                             dtFechaActual.setDate(dtFechaActual.getDate() + sumarDias);
                                             var fechaSpl = cad.split("/");
                                             var Caducidad = fechaSpl[2] + "-" + fechaSpl[1] + "-" + fechaSpl[0];
                                             /*alert(Caducidad);*/
 
                                             if (Date.parse(dtFechaActual) > Date.parse(Caducidad)) {
-                                                alert("La fecha de caducidad no puede ser menor a 9 meses próximos");
+                                                alert("La fecha de caducidad no puede ser menor a 6 meses próximos");
                                                 document.getElementById('cad').focus();
                                                 return false;
                                             }
@@ -1205,14 +1232,14 @@
                                         return false;
                                     } else {
                                         var dtFechaActual = new Date();
-                                        var sumarDias = parseInt(30);
+                                        var sumarDias = parseInt(180);
                                         dtFechaActual.setDate(dtFechaActual.getDate() + sumarDias);
                                         var fechaSpl = cad.split("/");
                                         var Caducidad = fechaSpl[2] + "-" + fechaSpl[1] + "-" + fechaSpl[0];
                                         /*alert(Caducidad);*/
 
                                         if (Date.parse(dtFechaActual) > Date.parse(Caducidad)) {
-                                            alert("La fecha de caducidad no puede ser menor a 9 meses próximos");
+                                            alert("La fecha de caducidad no puede ser menor a 6 meses próximos");
                                             document.getElementById('cad').focus();
                                             return false;
                                         }

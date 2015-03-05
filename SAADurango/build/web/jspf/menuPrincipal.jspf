@@ -16,11 +16,16 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
+
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Entradas<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <%
                             if (tipo.equals("2") || tipo.equals("3") || tipo.equals("1")) {
                         %>
+                        <li><a href="/SAADurango/SAP/cargarOrdenSAP.jsp">Subir Orden SAP</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/SAADurango/capturaISEM.jsp">Captura de Órdenes de Compra</a></li>
+                        <li class="divider"></li>
 
                         <li><a href="/SAADurango/captura.jsp">Entrada Manual</a></li>
                         <li><a href="/SAADurango/compraAuto2.jsp">Entrada Automática OC</a></li>
@@ -32,14 +37,15 @@
                                 if (tipo.equals("2") || tipo.equals("3") || tipo.equals("5")) {
                             %>
                         <li><a href="/SAADurango/verificarCompraAuto.jsp">Verificar Remisión</a></li>
-                            <%
-                                }
-                            %>
                         <li><a href="#" onclick="window.open('/SAADurango/reimpresion.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Reimpresión de Remisiones</a></li>
                         <li><a href="#"  onclick="window.open('/SAADurango/ordenesCompra.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Órdenes de Compras</a></li>
                         <li><a href="#"  onclick="window.open('/SAADurango/kardexClave.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Kardex Claves</a></li>
-                        <li><a href="#"  onclick="window.open('/SAADurango/hh/ubicacionesConsultas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Ubicaciones</a></li>
                         <!--li><a href="#"  onclick="window.open('/SAADurango/creaMarbetes.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Generar Marbetes</a></li-->
+
+                        <%
+                            }
+                        %>
+                        <li><a href="#"  onclick="window.open('/SAADurango/hh/ubicacionesConsultas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Ubicaciones</a></li>
 
                         <%
                             if (tipo.equals("5") || tipo.equals("3")) {
@@ -66,21 +72,24 @@
 
                     </ul>
                 </li>
+                <%
+                    if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2")) {
+                %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Facturación<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <%
-                            if (tipo.equals("7") || tipo.equals("3")) {
+                            if (tipo.equals("7")) {
                         %>
                         <li><a href="/SAADurango/requerimiento.jsp">Carga de Requerimiento</a></li>
                         <li class="divider"></li>
-                        <li><a href="/SAADurango/factura.jsp">Facturación Automática</a></li>
                             <%
                                 }
                             %>
                             <%
-                                if (tipo.equals("5") || tipo.equals("3") || tipo.equals("7") || tipo.equals("2")) {
+                                if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2")) {
                             %>
+                        <li><a href="/SAADurango/factura.jsp">Facturación Automática</a></li>
                         <li><a href="/SAADurango/facturacionManual.jsp">Facturación Manual</a></li>
                         <li><a href="/SAADurango/facturacionRural/verReqsWeb.jsp">Facturación Web</a></li>
                         <li class="divider"></li>
@@ -93,18 +102,27 @@
                         <%
                             if (tipo.equals("7")) {
                         %>
-                        <li><a href="/SAADurango/remisionarCamion.jsp">Generar Remisiones</a></li>
-                        <li class="divider"></li>
-                            <%
-                                }
-                            %>
                         <li><a href="#"  onclick="window.open('verDevoluciones.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Devoluciones</a></li>
+                        <li class="divider"></li>
                         <li><a href="/SAADurango/reimp_factura.jsp">Administrar Remisiones</a></li>
                         <li><a href="/SAADurango/reimpConcentrado.jsp">Reimpresión Folios a Remisionar</a></li>
                         <li><a href="/SAADurango/comparativoGlobal.jsp">Folios a Remisionar</a></li>
                         <li class="divider"></li>
-                        <li><a href="/SAADurango/facturacion/adminIFIQ.jsp">Administrar IFIQ</a></li>
-                        <li><a href="/SAADurango/facturacion/verIFIQ.jsp">Ver IFIQ</a></li>
+                        <li><a href="/SAADurango/Secuencial.jsp">Generar Secuencial</a></li>
+                        <li><a href="/SAADurango/RelacionarF.jsp">Relacionar Facturas</a></li>
+
+                        <%
+                            }
+                        %>
+                    </ul>
+                </li>
+                <%
+                    }
+                %>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Surtido<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/SAADurango/remisionarCamion.jsp">Generar Remisiones</a></li>
                     </ul>
                 </li>
                 <!--li class="dropdown">
@@ -121,28 +139,50 @@
                 %>
             <li><a href="#"  onclick="window.open('invenCiclico/nuevoInventario.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Inventario Ciclico</a></li>
         </ul>
-    </li-->
+    </li--> <%
+        if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2") || tipo.equals("8") || tipo.equals("9")) {
+                %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Operaciones<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <%
                             if (tipo.equals("8")) {
                         %>
-                        <li><a href="/SAADurango/operaciones/adminRutas.jsp">Administrar Rutas</a></li>
+                        <li><a href="#" onclick="window.open('/SAADurango/operaciones/adminRutas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Administrar Rutas</a></li>
                             <%
                                 }
                             %>
                         <li><a href="/SAADurango/operaciones/verRutas.jsp">Consultar Rutas</a></li>
                     </ul>
                 </li>
+                <%
+                    }
+                %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Catálogos<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" onclick="window.open('/SAADurango/medicamento.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Medicamento</a></li>
                         <li><a href="#" onclick="window.open('/SAADurango/catalogo.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Proveedores</a></li>
-                        <li><a href="#" onclick="window.open('/SAADurango/marcas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Marcas</a></li><li><a href="#" onclick="window.open('/SAADurango/marcas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Marcas</a></li>
+                        <li><a href="#" onclick="window.open('/SAADurango/marcas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Marcas</a></li>
                         <li><a href="#" onclick="window.open('/SAADurango/modula/catalogoCB.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de CB</a></li>
+                        <li><a href="#" onclick="window.open('/SAADurango/catalogoUnidades.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Unidades</a></li>
 
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Catálogos ISEM<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="window.open('/SAADurango/facturacion/catalogoArtIS.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Insumo ISEM</a></li>
+                        <li><a href="#" onclick="window.open('/SAADurango/facturacion/catalogoUniDis.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Catálogo de Unidades ISEM</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes Txt<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/SAADurango/Secuencial.jsp">Generar Secuencial</a></li>
+                        <li><a href="/SAADurango/RelacionarF.jsp">Relacionar Facturas</a></li>
+                        <li><a href="/SAADurango/CatalogoIsem/Txt.jsp">TXT</a></li>
+                        <li><a href="/SAADurango/ReportesPuntos/GeneraReporte.jsp">Reportes A</a></li>                        
                     </ul>
                 </li>
                 <!--li class="dropdown">

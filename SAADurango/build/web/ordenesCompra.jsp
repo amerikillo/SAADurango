@@ -232,7 +232,7 @@
                                 }
                                 try {
                                     con.conectar();
-                                    ResultSet rset = con.consulta("select o.F_NoCompra, u.F_Usuario, p.F_NomPro,DATE_FORMAT(o.F_FecSur, '%d/%m/%Y') F_FecSur, F_HorSur, F_Fecha from tb_pedidoisem o, tb_proveedor p, tb_usuariosisem u where u.F_IdUsu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and o.F_FecSur like  '%" + fecha + "%' and o.F_IdUsu like '%" + request.getParameter("Usuario") + "' and o.F_Provee like '%" + request.getParameter("Proveedor") + "' group by o.F_NoCompra");
+                                    ResultSet rset = con.consulta("select o.F_NoCompra, u.F_Usu, p.F_NomPro,DATE_FORMAT(o.F_FecSur, '%d/%m/%Y') F_FecSur, F_HorSur, F_Fecha from tb_pedidoisem o, tb_proveedor p, tb_usuario u where u.F_Usu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and o.F_FecSur like  '%" + fecha + "%' and o.F_IdUsu like '%" + request.getParameter("Usuario") + "' and o.F_Provee like '%" + request.getParameter("Proveedor") + "' group by o.F_NoCompra");
                                     while (rset.next()) {
                             %>
                             <tr>
@@ -263,10 +263,10 @@
                     <div class="panel-body">
                         <%                try {
                                 con.conectar();
-                                ResultSet rset = con.consulta("select o.F_NoCompra, p.F_NomPro, DATE_FORMAT(o.F_FecSur, '%d/%m/%Y'), F_HorSur, F_Usuario, F_StsPed, F_Recibido from tb_pedidoisem o, tb_proveedor p, tb_usuariosisem u where u.F_IdUsu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and F_NoCompra = '" + NoCompra + "' group by o.F_NoCompra");
+                                ResultSet rset = con.consulta("select o.F_NoCompra, p.F_NomPro, DATE_FORMAT(o.F_FecSur, '%d/%m/%Y'), F_HorSur, F_Usu, F_StsPed, F_Recibido from tb_pedidoisem o, tb_proveedor p, tb_usuario u where u.F_Usu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and F_NoCompra = '" + NoCompra + "' group by o.F_NoCompra");
                                 while (rset.next()) {
                                     int recibido = 0;
-                                    ResultSet rset2 = con.consulta("select o.F_NoCompra, p.F_NomPro, DATE_FORMAT(o.F_FecSur, '%d/%m/%Y'), F_HorSur, F_Usuario, F_StsPed, F_Recibido from tb_pedidoisem o, tb_proveedor p, tb_usuariosisem u where u.F_IdUsu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and F_NoCompra = '" + NoCompra + "' and F_Recibido=1 group by o.F_NoCompra");
+                                    ResultSet rset2 = con.consulta("select o.F_NoCompra, p.F_NomPro, DATE_FORMAT(o.F_FecSur, '%d/%m/%Y'), F_HorSur, F_Usu, F_StsPed, F_Recibido from tb_pedidoisem o, tb_proveedor p, tb_usuario u where u.F_Usu = o.F_IdUsu and  o.F_Provee = p.F_ClaProve and F_NoCompra = '" + NoCompra + "' and F_Recibido=1 group by o.F_NoCompra");
                                     while (rset2.next()) {
                                         recibido = rset2.getInt("F_Recibido");
                                     }
@@ -304,6 +304,26 @@
                             <div class="col-sm-1">
                                 <a class="btn btn-default" target="_blank" href="imprimeOrdenCompra.jsp?ordenCompra=<%=NoCompra%>"><span class="glyphicon glyphicon-print"></span></a>
                             </div>
+
+                            <%
+                                if (rset.getString("F_StsPed").equals("0")) {
+                            %>
+                            <div class="col-sm-1">
+                                <form name="formValidar" action="CapturaPedidos">
+                                    <input value="<%=rset.getString("F_NoCompra")%>" name="F_NoCompra" class="hidden" />
+                                    <button class="btn btn-default" value="confirmarRemi" name="accion">Validar</button>
+                                </form>
+                            </div>
+                            <%
+                                }
+                            %>
+
+                            <div class="col-sm-1">
+                                <form name="formValidar" action="CapturaPedidos">
+                                    <input value="<%=rset.getString("F_NoCompra")%>" name="F_NoCompra" class="hidden" />
+                                    <button class="btn btn-default" value="eliminarRemi" name="accion">Eliminar</button>
+                                </form>
+                            </div>
                         </div>
                         <div class="panel-body">
                             <form name="FormBusca" action="CapturaPedidos" method="post">
@@ -314,7 +334,7 @@
                                     </div>
                                     <h4 class="col-sm-3">Capturó: </h4>
                                     <div class="col-sm-3">
-                                        <input class="form-control" value="<%=rset.getString("F_Usuario")%>" readonly="" />
+                                        <input class="form-control" value="<%=rset.getString("F_Usu")%>" readonly="" />
                                     </div>
 
                                 </div>
@@ -383,7 +403,7 @@
                                         }
                                         con.cierraConexion();
                                     } catch (Exception e) {
-
+                                        System.out.println(e.getMessage());
                                     }
                                 %>
                             </form>
@@ -415,6 +435,7 @@
                                             con.cierraConexion();
                                         } catch (Exception e) {
 
+                                            System.out.println(e.getMessage());
                                         }
                                     %>
 
@@ -428,7 +449,7 @@
         <br><br><br>
         <div class="navbar navbar-fixed-bottom navbar-inverse">
             <div class="text-center text-muted">
-                GNK Logística || Desarrollo de Aplicaciones 2009 - 2014 <span class="glyphicon glyphicon-registration-mark"></span><br />
+                GNK Logística || Desarrollo de Aplicaciones 2009 - 2015 <span class="glyphicon glyphicon-registration-mark"></span><br />
                 Todos los Derechos Reservados
             </div>
         </div>
@@ -443,11 +464,11 @@
     <script src="js/jquery.dataTables.js"></script>
     <script src="js/dataTables.bootstrap.js"></script>
     <script>
-                                        $(document).ready(function() {
+                                        $(document).ready(function () {
                                             $('#datosCompras').dataTable();
                                         });
 
-                                        $(function() {
+                                        $(function () {
                                             $("#Fecha").datepicker();
                                             $("#Fecha").datepicker('option', {dateFormat: 'dd/mm/yy'});
                                         });

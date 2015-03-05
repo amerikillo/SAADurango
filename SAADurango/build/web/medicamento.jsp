@@ -40,7 +40,7 @@
         <link href="css/navbar-fixed-top.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">
         <!---->
-        <title>SIALSS</title>
+        <title>SIE Sistema de Ingreso de Entradas</title>
     </head>
     <body>
         <div class="container">
@@ -88,7 +88,17 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="row">
+                        <div>
+                            <label for="F_Origen" class="col-xs-1 control-label">Origen</label>
+                            <div class="col-xs-2">
+                                <select name="F_Origen" id="F_Origen" class="form-control">
+                                    <option value="1">Admon</option>
+                                    <option value="2">Venta</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br/>
+                        <!--div class="row">
                             <label for="Costo" class="col-xs-1 control-label">Máximo</label>
                             <div class="col-xs-2">
                                 <input type="number" class="form-control" id="Max" name="Max" placeholder="Máximo"  />
@@ -97,7 +107,7 @@
                             <div class="col-xs-2">
                                 <input type="number" class="form-control" id="Min" name="Min" placeholder="Mínimo"   />
                             </div>
-                        </div>
+                        </div-->
                         <br/>
                         <button class="btn btn-block btn-primary" type="submit" name="accion" value="guardar" onclick="return valida_alta();"> Guardar</button> 
 
@@ -112,12 +122,12 @@
                             <thead>
                                 <tr>
                                     <td>CLAVE</td>
-                                    <td>Clave SAP</td>
+                                    <td>SAP</td>
                                     <td>Descripción</td>
                                     <td>Tipo Medicamento</td>
                                     <td>Costo</td>
-                                    <td>Max</td>
-                                    <td>Min</td>
+                                    <!--td>Max</td>
+                                    <td>Min</td-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,7 +136,7 @@
                                         con.conectar();
                                         int tipo = 0;
                                         String DesTipo = "";
-                                        ResultSet rset = con.consulta("SELECT * FROM tb_medica where F_Costo!=0 ORDER BY F_DesPro ASC");
+                                        ResultSet rset = con.consulta("SELECT m.* FROM tb_medica m, tb_artiis a where m.F_ClaPro = a.F_ClaInt ORDER BY F_DesPro ASC");
                                         while (rset.next()) {
                                             int max = 0, min = 0;
                                             ResultSet rset2 = con.consulta("select F_Max, F_Min from tb_maxmodula where F_ClaPro = '" + rset.getString("F_ClaPro") + "'");
@@ -147,9 +157,8 @@
                                     <td><small><%=rset.getString(2)%></small></td>
                                     <td><small><%=DesTipo%></small></td>
                                     <td class="text-right"><small>$ <%=formatterDecimal.format(rset.getDouble(5))%></small></td>  
-                                    <td><input type="number" name="Max<%=rset.getString(1)%>" class="form-control input-sm text-right" value="<%=(max)%>" /></td>  
-                                    <td><input type="number" name="Min<%=rset.getString(1)%>" class="form-control input-sm text-right" value="<%=(min)%>" /></td>                            
-
+                                    <!--td><input type="number" name="Max<%=rset.getString(1)%>" class="form-control input-sm text-right" value="<%=(max)%>" /></td>  
+                                    <td><input type="number" name="Min<%=rset.getString(1)%>" class="form-control input-sm text-right" value="<%=(min)%>" /></td-->
                                 </tr>
                                 <%
                                         }
