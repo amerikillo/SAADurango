@@ -20,7 +20,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Entradas<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <%
-                            if (tipo.equals("2") || tipo.equals("3") || tipo.equals("1")) {
+                            if (tipo.equals("2") || tipo.equals("3") || tipo.equals("1") || tipo.equals("10")) {
                         %>
                         <li><a href="/SAADurango/SAP/cargarOrdenSAP.jsp">Subir Orden SAP</a></li>
                         <li class="divider"></li>
@@ -34,7 +34,7 @@
                         <li class="divider"></li-->
                             <%
                                 }
-                                if (tipo.equals("2") || tipo.equals("3") || tipo.equals("5")) {
+                                if (tipo.equals("2") || tipo.equals("3") || tipo.equals("5") || tipo.equals("10")) {
                             %>
                         <li><a href="/SAADurango/verificarCompraAuto.jsp">Verificar Remisión</a></li>
                         <li><a href="#" onclick="window.open('/SAADurango/reimpresion.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Reimpresión de Remisiones</a></li>
@@ -48,7 +48,7 @@
                         <li><a href="#"  onclick="window.open('/SAADurango/hh/ubicacionesConsultas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Ubicaciones</a></li>
 
                         <%
-                            if (tipo.equals("5") || tipo.equals("3")) {
+                            if (tipo.equals("5") || tipo.equals("3") || tipo.equals("10")) {
                         %>
                         <li class="divider"></li>
                         <li><a href="/SAADurango/hh/insumoNuevoRedist.jsp">Redistribución HH</a></li>
@@ -57,7 +57,7 @@
                                 }
                             %>
                             <%
-                                if (usua.equals("oscar")) {
+                                if (usua.equals("oscar") || tipo.equals("10")) {
                             %>
                         <li class="divider"></li>
                         <li><a href="#"  onclick="window.open('/SAADurango/devolucionesInsumo.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Cambio Físico</a></li>
@@ -73,7 +73,7 @@
                     </ul>
                 </li>
                 <%
-                    if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2")) {
+                    if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2") || tipo.equals("10")) {
                 %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Facturación<b class="caret"></b></a>
@@ -87,7 +87,7 @@
                                 }
                             %>
                             <%
-                                if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2")) {
+                                if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2") || tipo.equals("10")) {
                             %>
                         <li><a href="/SAADurango/factura.jsp">Facturación Automática</a></li>
                         <li><a href="/SAADurango/facturacionManual.jsp">Facturación Manual</a></li>
@@ -100,7 +100,7 @@
                             }
                         %>
                         <%
-                            if (tipo.equals("7")) {
+                            if (tipo.equals("7") || tipo.equals("10")) {
                         %>
                         <li><a href="#"  onclick="window.open('verDevoluciones.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Devoluciones</a></li>
                         <li class="divider"></li>
@@ -130,7 +130,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#"  onclick="window.open('Ubicaciones/Inventario.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Inventario</a></li>
                 <%
-                    if (tipo.equals("5") || tipo.equals("3") || tipo.equals("7") || tipo.equals("2")) {
+                    if (tipo.equals("5") || tipo.equals("3") || tipo.equals("7") || tipo.equals("2") || tipo.equals("8") || tipo.equals("10")) {
                 %>
             <li><a href="#"  onclick="window.open('movimientosUsuarioInventario.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Movimientos por Usuario</a></li>
             <li><a href="#"  onclick="window.open('semaforo.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Semaforización</a></li>
@@ -140,13 +140,13 @@
             <li><a href="#"  onclick="window.open('invenCiclico/nuevoInventario.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Inventario Ciclico</a></li>
         </ul>
     </li--> <%
-        if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2") || tipo.equals("8") || tipo.equals("9")) {
+        if (tipo.equals("5") || tipo.equals("7") || tipo.equals("2") || tipo.equals("8") || tipo.equals("9") || tipo.equals("10")) {
                 %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Operaciones<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <%
-                            if (tipo.equals("8")) {
+                            if (tipo.equals("8") || tipo.equals("10")) {
                         %>
                         <li><a href="#" onclick="window.open('/SAADurango/operaciones/adminRutas.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Administrar Rutas</a></li>
                             <%

@@ -59,7 +59,7 @@
         <div class="container">
             <h1>SIALSS</h1>
             <h4>SISTEMA INTEGRAL DE ADMINISTRACIÓN Y LOGÍSTICA PARA SERVICIOS DE SALUD</h4>
-            
+
             <%@include file="../jspf/menuPrincipal.jspf" %>
 
             <div class="row">
@@ -85,7 +85,7 @@
                                     <td>Devolución</td>
                                     <td>Reportes</td>
                                     <%
-                                        if (usua.equals("remision")) {
+                                        if (usua.equals("remision") || tipo.equals("10")) {
                                             out.println("<td>Reintegrar Insumo</td>");
                                         }
                                     %>
@@ -142,7 +142,7 @@
                                         </form>
                                     </td>
                                     <%
-                                        if (usua.equals("remision")) {
+                                        if (usua.equals("remision") || tipo.equals("10")) {
                                     %>
                                     <td>
                                         <%
@@ -196,9 +196,9 @@
 <script src="js/jquery.dataTables.js"></script>
 <script src="js/dataTables.bootstrap.js"></script>
 <script>
-                                        $(document).ready(function() {
-                                            $('#datosCompras').dataTable();
-                                        });
+                                                $(document).ready(function() {
+                                                    $('#datosCompras').dataTable();
+                                                });
 </script>
 <script>
     $(function() {

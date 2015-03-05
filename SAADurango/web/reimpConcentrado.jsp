@@ -129,7 +129,7 @@
                                     <td>
                                         <form action="Facturacion" method="post">
                                             <%
-                                                if (usua.equals("remision")) {
+                                                if (usua.equals("remision") || tipo.equals("10")) {
                                             %>
                                             <input class="hidden" name="fol_gnkl" value="<%=rset.getString("F_IdFact")%>">
                                             <button class="btn btn-block btn-danger" name="accion" value="EliminaConcentrado" onclick="return confirm('Seguro de eliminar este concentrado?')"><span class="glyphicon glyphicon-remove"></span></button>
@@ -221,12 +221,12 @@
         <script src="js/jquery.dataTables.js"></script>
         <script src="js/dataTables.bootstrap.js"></script>
         <script>
-                                                $(document).ready(function () {
+                                                $(document).ready(function() {
                                                     $('#datosCompras').dataTable();
                                                 });
         </script>
         <script>
-            $(function () {
+            $(function() {
                 $("#fecha").datepicker();
                 $("#fecha").datepicker('option', {dateFormat: 'dd/mm/yy'});
             });
