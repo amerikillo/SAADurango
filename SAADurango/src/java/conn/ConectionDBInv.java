@@ -52,7 +52,7 @@ public class ConectionDBInv {
          this.driverClassName = "org.gjt.mm.mysql.Driver";*/
         this.usuario = "root";
         this.clave = "eve9397";
-        this.url = "jdbc:mysql://localhost:3306/gnklmex_consolidada2_inv";
+        this.url = "jdbc:mysql://192.168.0.180:3306/gnklmex_durango_inv";
         //this.url = "jdbc:mysql://192.168.2.180:3306/gnklmex_consolidada2";
         this.driverClassName = "org.gjt.mm.mysql.Driver";
     }

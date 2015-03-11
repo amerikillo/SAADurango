@@ -69,6 +69,22 @@
                     <a class="btn btn-success" href="gnrFacturaConcentrado.jsp" target="_blank">Exportar Global</a>
                 </div>
             </div>
+            <div class="row">
+                <form action="gnrSolvsSur.jsp">
+                    <h4 class="col-sm-3">
+                        Solicitado vs Surtido:
+                    </h4>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="date" name="fecha1" required />
+                    </div>
+                    <div class="col-sm-2">
+                        <input class="form-control" type="date" name="fecha2" required />
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn btn-block btn-success" type="submit"><span class="glyphicon glyphicon-download"></span></button>
+                    </div>
+                </form>
+            </div>
             <div>
                 <br />
                 <div class="panel panel-primary">

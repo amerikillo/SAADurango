@@ -200,11 +200,30 @@
         <servlet-name>LeerFactXls</servlet-name>
         <servlet-class>LeeExcel.LeerFactXls</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubirIFIQServlet</servlet-name>
+        <servlet-class>IFIQ.SubirIFIQServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubirInvenServlet</servlet-name>
+        <servlet-class>InvenUnidades.SubirInvenServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletInventarios</servlet-name>
+        <servlet-class>InvenUnidades.ServletInventarios</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubirInvenServlet</servlet-name>
+        <url-pattern>/inventariosUnidades/SubirInvenServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubirIFIQServlet</servlet-name>
+        <url-pattern>/ifiq/SubirIFIQServlet</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CargaUnidadesServlet</servlet-name>
         <url-pattern>/facturacion/CargaUnidadesServlet</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>CargaFacturas</servlet-name>
         <url-pattern>/CargaFacturas</url-pattern>
@@ -400,6 +419,10 @@
     <servlet-mapping>
         <servlet-name>Caratula</servlet-name>
         <url-pattern>/Caratula</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletInventarios</servlet-name>
+        <url-pattern>/inventariosUnidades/ServletInventarios</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

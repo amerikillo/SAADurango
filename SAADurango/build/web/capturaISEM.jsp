@@ -4,13 +4,16 @@
     Author     : Americo
 --%>
 
+<%@page import="conn.ConectionDB_Linux"%>
 <%@page import="java.text.*"%>
 <%@page import="conn.ConectionDB"%>
 <%@page import="ISEM.CapturaPedidos"%>
 <%@page import="javax.servlet.http.HttpSession"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%    DecimalFormat formatter = new DecimalFormat("#,###,###");
+<%
+    DecimalFormat formatter = new DecimalFormat("#,###,###");
+    DecimalFormat formNoCom = new DecimalFormat("000");
     DecimalFormatSymbols custom = new DecimalFormatSymbols();
     custom.setDecimalSeparator('.');
     custom.setGroupingSeparator(',');
@@ -18,17 +21,18 @@
     HttpSession sesion = request.getSession();
     String usua = "";
     String tipo = "";
-    if (sesion.getAttribute("Usuario") != null) {
-        usua = (String) sesion.getAttribute("Usuario");
+    if (sesion.getAttribute("nombre") != null) {
+        usua = (String) sesion.getAttribute("nombre");
         tipo = (String) sesion.getAttribute("Tipo");
     } else {
-        response.sendRedirect("indexIsem.jsp");
+        response.sendRedirect("../index.jsp");
     }
     ConectionDB con = new ConectionDB();
+    ConectionDB_Linux conLinux = new ConectionDB_Linux();
     CapturaPedidos indice = new CapturaPedidos();
     String proveedor = "", fecEnt = "", horEnt = "", claPro = "", desPro = "", NoCompra = "";
     try {
-        NoCompra = (String) sesion.getAttribute("NoOrdCompra");
+        NoCompra = (String) sesion.getAttribute("NoCompra");
         proveedor = (String) sesion.getAttribute("proveedor");
         fecEnt = (String) sesion.getAttribute("fec_entrega");
         horEnt = (String) sesion.getAttribute("hor_entrega");
@@ -50,10 +54,49 @@
     if (NoCompra == null) {
         NoCompra = "";
     }
+    if (request.getParameter("accion") != null) {
+        if (request.getParameter("accion").equals("nuevaOrden")) {
 
-    if (NoCompra.equals("")) {
-        //NoCompra = indice.noCompra();
-        //sesion.setAttribute("NoCompra", NoCompra);
+            System.out.println("***" + NoCompra);
+            try {
+                con.conectar();
+                int banIndice = 0;
+                ResultSet rset = con.consulta("select (F_NoCompra) as F_NoCompra, F_StsPed from tb_pedidoisem where F_IdUsu='" + usua + "'");
+                rset.last();
+                try {
+                    if (rset.getInt("F_StsPed") == 0) {
+                        NoCompra = rset.getString("F_NoCompra");
+                        banIndice = 1;
+                    }
+                } catch (Exception e) {
+
+                }
+                System.out.println(NoCompra + "---");
+                if (NoCompra == null || NoCompra.equals("")) {
+                    rset = con.consulta("select MAX(F_NoCompra) as F_NoCompra from tb_pedidoisem");
+                    int F_IndIsem = 0, maxIndice = 0;
+                    while (rset.next()) {
+                        try {
+                            String NoMax[] = rset.getString(1).split("-");
+                            maxIndice = Integer.parseInt(NoMax[0]);
+                        } catch (Exception e) {
+                            maxIndice = 1;
+                        }
+                    }
+                    rset = con.consulta("select F_IndIsem from tb_indice");
+                    while (rset.next()) {
+                        F_IndIsem = rset.getInt("F_IndIsem");
+                    }
+                    NoCompra = indice.noCompra();
+                    NoCompra = formNoCom.format(Integer.parseInt(NoCompra)) + "-2015";
+                    sesion.setAttribute("NoCompra", NoCompra);
+                }
+                con.cierraConexion();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
     }
 %>
 
@@ -62,7 +105,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ISEM</title>
+        <title>SSM</title>
         <!-- Estilos CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/datepicker3.css" rel="stylesheet">
@@ -75,18 +118,20 @@
     <body onload="focusLocus();
             SelectProve(FormBusca);">
         <div class="container">
-
             <h1>SIALSS</h1>
-            <h4>Módulo - Sistema de Administración de Almacenes (SAA)</h4>
-
-            <%@include file="jspf/menuPrincipal.jspf" %>
+            <h4>SISTEMA INTEGRAL DE ADMINISTRACIÓN Y LOGÍSTICA PARA SERVICIOS DE SALUD</h4>
+            <%@include file="../jspf/menuPrincipal.jspf" %>
+            <hr/>
+            <%
+                if (NoCompra != null && !NoCompra.equals("")) {
+            %>
             <form name="FormBusca" action="CapturaPedidos" method="post">
                 <div class="row">
                     <label class="col-sm-3 col-sm-offset-7 text-right">
                         <h4>Número de Orden de Compra</h4>
                     </label>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="NoCompra" name="NoCompra" required="" value="<%=NoCompra%>" />
+                        <input type="text" class="form-control" id="NoCompra" name="NoCompra" value="<%=NoCompra%>" readonly=""  />
                     </div>
                 </div>
                 <br/>
@@ -120,16 +165,13 @@
 
                         </select>
                     </div>
-                    <div class="col-sm-2">
-                        <a href="#" class="btn btn-block btn-default" onclick="window.open('/SAAISEM/catalogo.jsp', '', 'width=1200,height=800,left=50,top=50,toolbar=no')">Agregar Proveedor</a>
-                    </div>
                 </div>
                 <div class="row">
                     <label class="col-sm-2">
                         <h4>Fecha de Entrega:</h4>
                     </label>
                     <div class="col-sm-2">
-                        <input type="date" class="form-control" id="Fecha" name="Fecha" value="<%=fecEnt%>"  /><!--onchange="document.getElementById('Hora').focus()"-->
+                        <input type="date" class="form-control" id="Fecha" name="Fecha" value="<%=fecEnt%>" onchange="document.getElementById('Hora').focus()" />
                     </div>
                     <label class="col-sm-2">
                         <h4>Hora de Entrega:</h4>
@@ -178,17 +220,15 @@
                         <h4>Clave:</h4>
                     </label>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="Clave" name="Clave" />
-                        <!--select name="Clave" id="Clave" class="form-control">
+                        <!--input type="text" class="form-control" id="Clave" name="Clave" /-->
+                        <select name="Clave" id="Clave" class="form-control">
                             <option>-- Seleccione --</option>
-                        </select-->
+                        </select>
                     </div>
                     <div class="col-sm-1">
                         <button class="btn btn-primary btn-block" onclick="return validaClaDes(this);" name="accion" value="Clave">Clave</button>
                     </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-primary btn-block" name="accion" value="Actualizar"><span class="glyphicon glyphicon-refresh"></span></button>
-                    </div>
+
                 </div>
             </form>
             <br/>
@@ -264,36 +304,36 @@
                             <%
                                 String cantidad = "0";
                                 try {
-                                    con.conectar();
-                                    ResultSet rset = con.consulta(" select SUM(F_ExiLot) from tb_lote where F_ClaPro = '" + claPro + "' group by F_ClaPro  ");
+                                    conLinux.conectar();
+                                    ResultSet rset = conLinux.consulta(" select SUM(F_ExiLot) from tb_lote where F_ClaPro = '" + claPro + "' group by F_ClaPro  ");
                                     while (rset.next()) {
                                         cantidad = rset.getString(1);
                                     }
                                     if (cantidad == null) {
                                         cantidad = "0";
                                     }
-                                    con.cierraConexion();
+                                    conLinux.cierraConexion();
                                 } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }
                             %>
-                            <label class="hidden">
+                            <label class="col-sm-2 text-center">
                                 <h4>Exist. en Almacén:</h4>
                             </label>
-                            <div class="hidden">
+                            <div class="col-sm-2">
                                 <input type="text" class="form-control" name="CantAlm" id="CantAlm" readonly="" value="<%=formatter.format(Integer.parseInt(cantidad))%>" />
                             </div>
-                            <label class="hidden">
+                            <label class="col-sm-2 text-center">
                                 <h4>No. de Entrega:</h4>
                             </label>
-                            <div class="hidden">
+                            <div class="col-sm-2">
                                 <select  class="form-control" name="Prioridad" id="Prioridad" onchange="document.getElementById('CanPro').focus()" >
-                                    <option selected="">101</option>
-                                    <option>102</option>
-                                    <option>103</option>
-                                    <option>104</option>
-                                    <option>105</option>
-                                    <option>106</option>
+                                    <option selected="">1-2015</option>
+                                    <option>2-2015</option>
+                                    <option>3-2015</option>
+                                    <option>4-2015</option>
+                                    <option>5-2015</option>
+                                    <option>6-2015</option>
                                     <option>ND</option>
                                 </select>
                             </div>
@@ -309,7 +349,7 @@
                             <div class="hidden">
                                 <input type="text" class="form-control" data-date-format="dd/mm/yyyy" readonly="" name="CadPro" id="CadPro"/>
                             </div><label class="col-sm-2 text-right">
-                                <h4>Piezas a Recibir:</h4>
+                                <h4>Pzs a Entregar:</h4>
                             </label>
                             <div class="col-sm-2">
                                 <input type="text" class="form-control" name="CanPro" id="CanPro" onKeyPress="return justNumbers(event);" />
@@ -377,6 +417,7 @@
                 %>
                 <form name="FormCaptura" action="CapturaPedidos" method="post">
                     <div class="col-sm-6">
+                        <input class="hidden" name="NoCompra" value="<%=NoCompra%>"/>
                         <button class="btn btn-success btn-block" name="accion" value="confirmar" onclick="return confirm('¿Seguro que desea CONFIRMAR el pedido?')">Confirmar Orden de Compra</button>
                     </div>
                     <div class="col-sm-6">
@@ -387,6 +428,15 @@
                     }
                 %>
             </div>
+            <%
+            } else {
+            %>
+            <form action="capturaISEM.jsp" method="post">
+                <button class="btn btn-block btn-primary" name="accion" value="nuevaOrden">Nueva Orden</button>
+            </form>
+            <%
+                }
+            %>
         </div>
         <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="js/bootstrap.js"></script>
@@ -410,7 +460,7 @@
                                     document.getElementById('Clave').focus();
                                 }
                                 if (document.getElementById('ClaPro').value !== "") {
-                                    document.getElementById('CanPro').focus();
+                                    document.getElementById('Prioridad').focus();
                                 }
                             }
 
@@ -479,7 +529,7 @@
             <%
                 try {
                     con.conectar();
-                    ResultSet rset3 = con.consulta("select DISTINCT F_ClaProve from tb_prodprov order by F_ClaProve");
+                    ResultSet rset3 = con.consulta("select DISTINCT F_ClaProve from tb_prodprov");
                     while (rset3.next()) {
                         out.println("if (form.Proveedor.value == '" + rset3.getString(1) + "') {");
                         out.println("var select = document.getElementById('Clave');");
@@ -503,8 +553,5 @@
 
 
         </script>
-
-    <%@include file="jspf/piePagina.jspf" %>
     </body>
-
 </html>

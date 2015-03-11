@@ -42,7 +42,7 @@
 			<staticText>
 				<reportElement uuid="0d3b8b2f-425d-4cd4-b0a6-4d359b96665b" x="196" y="13" width="184" height="17"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[CEDIS Lerma Park]]></text>
+				<text><![CDATA[CEDIS DURANGO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="71f4305c-c47f-4eac-a49e-6410001fd890" x="196" y="30" width="184" height="20"/>

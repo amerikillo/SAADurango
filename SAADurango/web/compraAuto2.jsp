@@ -678,7 +678,7 @@
                                     <%}%>
                                 </div>
                                 <%
-                                    if (tipo.equals("2") || tipo.equals("3") || tipo.equals("1")) {
+                                    if (tipo.equals("2") || tipo.equals("3") || tipo.equals("1") || tipo.equals("10")) {
                                 %>
                                 <div class="col-sm-4">
                                     <div id="imgCarga" style="display: none">
